@@ -1,0 +1,47 @@
+lantern.aquired.red=There is great rage in %s's heart.
+lantern.aquired.orange=%s is overcome with avarice.
+lantern.aquired.yellow=%s has the ability to instill great fear.
+lantern.aquired.green=%s has the ability to overcome great fear.
+lantern.aquired.blue=%s knows that All Will be Well.
+lantern.aquired.indigo=%s Sor nok lek cur Abin Sur
+lantern.aquired.violet=%s is overcome with love.
+lantern.aquired.black=%s, Rise!
+lantern.aquired.white=%s banishes darkness.
+
+lantern.red.charge=Rage
+lantern.orange.charge=Averice
+lantern.yellow.charge=Fear
+lantern.green.charge=Willpower
+lantern.blue.charge=Hope
+lantern.indigo.charge=Compassion
+lantern.violet.charge=Love
+lantern.black.charge=Death
+lantern.white.charge=Life
+
+item.powerLantern.red.name=Red Ring
+item.powerLantern.orange.name=Orange Ring
+item.powerLantern.yellow.name=Yellow Ring
+item.powerLantern.green.name=Green Ring
+item.powerLantern.blue.name=Blue Ring
+item.powerLantern.indigo.name=Indigo Staff
+item.powerLantern.violet.name=Violet Ring
+item.powerLantern.black.name=Black Ring
+item.powerLantern.white.name=White Ring
+
+item.lanternPower.red=Red Ring1
+item.lanternPower.orange=Orange Ring1
+item.lanternPower.yellow=Yellow Ring1
+item.lanternPower.green=Green Ring1
+item.lanternPower.blue=Blue Ring1
+item.lanternPower.indigo=Indigo Staff1
+item.lanternPower.violet=Violet Ring1
+item.lanternPower.black=Black Ring1
+item.lanternPower.white=White Ring1
+
+item.lanternPower.name=Lantern of Power
+
+key.classmod.powers=Class Power Keybindings
+key.classmod.power1=Active Power 1
+key.classmod.power2=Active Power 2
+key.classmod.power3=Active Power 3
+key.classmod.power4=Active Power 4
