@@ -1,17 +1,15 @@
 package alpvax.waroflight.core;
 
+import alpvax.waroflight.util.ConfigHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import alpvax.waroflight.util.ConfigHelper;
 
 
 public class WOLHooks
@@ -38,16 +36,16 @@ public class WOLHooks
 			//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
 		}
 	}
-
+	
+	/*TODO:create packet and send to player: sendTo(msg, player)
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent e)
 	{
 		if(e.entity instanceof EntityPlayerMP)
 		{
-			/*TODO:create packet and send to player: sendTo(msg, player)
-			WOLPlayer.get((EntityPlayer)e.entity).getDataForClient();*/
+			WOLPlayer.get((EntityPlayer)e.entity).getDataForClient();
 		}
-	}
+	}*/
 
 	@SubscribeEvent
 	public void onKill(LivingDeathEvent e)
@@ -80,7 +78,10 @@ public class WOLHooks
 			WOLPlayer p = WOLPlayer.get(player);
 			if(p != null)
 			{
-				//TODO: On update
+				if(player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
+				{
+					//TODO:Give
+				}
 			}
 		}
 	}

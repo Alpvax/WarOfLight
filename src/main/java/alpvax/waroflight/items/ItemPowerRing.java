@@ -65,23 +65,23 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 		}
 	}
 
-	/*TODO: implement IItemPowerProvider
+	/*TOD O: implement IItemPowerProvider
 	@Override
 	public void itemAdded(Provider provider, EntityPlayer player)
 	{
-		// TODO Auto-generated method stub
+		// TOD O Auto-generated method stub
 	}
 
 	@Override
 	public String itemKey()
 	{
-		return null;//TODO: colour.name();
+		return null;//TOD O: colour.name();
 	}
 
 	@Override
 	public Provider getProviderFromStack(ItemStack stack)
 	{
-		return null;// TODO Auto-generated method stub
+		return null;// TOD O Auto-generated method stub
 	}*/
 
 	public EnumEmotion getEffectiveColour(ItemStack stack)
