@@ -1,4 +1,4 @@
-package alpvax.wayoflight.blocks;
+package alpvax.waroflight.blocks;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
 import net.minecraft.block.Block;

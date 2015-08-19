@@ -1,4 +1,4 @@
-package alpvax.wayoflight.core;
+package alpvax.waroflight.core;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,8 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import alpvax.playerpowers.api.player.PoweredPlayer;
-import alpvax.wayoflight.items.WOLItems;
+import alpvax.waroflight.items.WOLItems;
 
 
 public class WOLPlayer implements IExtendedEntityProperties
@@ -21,12 +20,12 @@ public class WOLPlayer implements IExtendedEntityProperties
 	private static final String TAG_LEVEL = "Level";
 	private static final String TAG_MASTERED = "Mastered";
 
-	private Map<EnumLanternColour, LanternState> lanternStates = new HashMap<EnumLanternColour, LanternState>();
+	private Map<EnumEmotion, LanternState> lanternStates = new HashMap<EnumEmotion, LanternState>();
 
 	@Override
 	public void saveNBTData(NBTTagCompound compound)
 	{
-		for(EnumLanternColour key : lanternStates.keySet())
+		for(EnumEmotion key : lanternStates.keySet())
 		{
 			compound.setTag(key.name(), lanternStates.get(key).writeToNBT(new NBTTagCompound()));
 		}
@@ -35,7 +34,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 	@Override
 	public void loadNBTData(NBTTagCompound compound)
 	{
-		for(EnumLanternColour key : lanternStates.keySet())
+		for(EnumEmotion key : lanternStates.keySet())
 		{
 			lanternStates.get(key).readFromNBT(compound);
 		}
@@ -44,21 +43,21 @@ public class WOLPlayer implements IExtendedEntityProperties
 	@Override
 	public void init(Entity entity, World world)
 	{
-		for(EnumLanternColour e : EnumLanternColour.values)
+		for(EnumEmotion e : EnumEmotion.values)
 		{
 			lanternStates.put(e, new LanternState());
 		}
 	}
 
-	public void giveLantern(EntityPlayer player, EnumLanternColour c)
+	public void giveLantern(EntityPlayer player, EnumEmotion e)
 	{
-		if(player.inventory.addItemStackToInventory(new ItemStack(WOLItems.lantern, 1, c.ordinal())))
+		if(player.inventory.addItemStackToInventory(new ItemStack(WOLItems.ring, 1, e.ordinal())))
 		{
 			for(Object o : player.worldObj.playerEntities)
 			{
 				EntityPlayer p = (EntityPlayer)o;
-				p.addChatComponentMessage(new ChatComponentTranslation("lantern.aquired." + c.name().toLowerCase(Locale.ENGLISH), p.getDisplayNameString()));
-				lanternStates.get(c).mastered = true;
+				p.addChatComponentMessage(new ChatComponentTranslation("lantern.aquired." + e.name().toLowerCase(Locale.ENGLISH), p.getDisplayNameString()));
+				lanternStates.get(e).mastered = true;
 				for(LanternState l : lanternStates.values())
 				{
 					if(!l.mastered)
@@ -66,14 +65,19 @@ public class WOLPlayer implements IExtendedEntityProperties
 						return;
 					}
 				}
-				giveLantern(player, EnumLanternColour.WHITE);
+				giveLantern(player, EnumEmotion.LIFE);
 			}
 		}
 	}
 
-	public Object getLevel(EnumLanternColour c)
+	public int getLevel(EnumEmotion e)
 	{
-		return lanternStates.get(c).level;
+		return lanternStates.get(e).level;
+	}
+
+	public void addLevel(EnumEmotion e, int modifier)
+	{
+		lanternStates.get(e).level += modifier;
 	}
 
 	public class LanternState
@@ -101,7 +105,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 
 	public static final void register(EntityPlayer player)
 	{
-		player.registerExtendedProperties(TAG_LANTERN_STATES, new PoweredPlayer());
+		player.registerExtendedProperties(TAG_LANTERN_STATES, new WOLPlayer());
 	}
 
 	public static final WOLPlayer get(EntityPlayer player)

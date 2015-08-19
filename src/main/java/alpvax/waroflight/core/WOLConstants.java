@@ -1,4 +1,4 @@
-package alpvax.wayoflight.core;
+package alpvax.waroflight.core;
 
 public class WOLConstants
 {

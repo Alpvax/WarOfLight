@@ -1,4 +1,4 @@
-package alpvax.wayoflight.items;
+package alpvax.waroflight.items;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,28 +12,29 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import alpvax.wayoflight.core.EnumLanternColour;
-import alpvax.wayoflight.core.WOLPlayer;
+import alpvax.waroflight.core.EnumEmotion;
+import alpvax.waroflight.core.WOLPlayer;
+import alpvax.waroflight.core.WarOfLightMod;
 
 
-public class ItemPowerLantern extends Item// implements IItemPowerProvider
+public class ItemPowerRing extends Item// implements IItemPowerProvider
 {
 	private static final String TAG_ACTIVE_COLOUR = "LanternColour";
 
-	public ItemPowerLantern()
+	public ItemPowerRing()
 	{
 		GameRegistry.registerItem(this, "lantern");
 		setHasSubtypes(true);
 		setMaxDamage(0);
 		setMaxStackSize(1);
-		setCreativeTab(CreativeTabs.tabCombat);
+		setCreativeTab(WarOfLightMod.creativeTab);
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		int i = stack.getMetadata();
-		return super.getUnlocalizedName() + "." + EnumLanternColour.values[i].name().toLowerCase(Locale.ENGLISH);
+		return super.getUnlocalizedName() + "." + EnumEmotion.values[i].name().toLowerCase(Locale.ENGLISH);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -41,11 +42,11 @@ public class ItemPowerLantern extends Item// implements IItemPowerProvider
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced)
 	{
-		for(EnumLanternColour c : EnumLanternColour.values)
+		for(EnumEmotion e : EnumEmotion.values)
 		{
-			if(advanced || c == getEffectiveColour(stack))
+			if(advanced || e == getEffectiveColour(stack))
 			{
-				tooltip.add(c.chatColour() + I18n.format("lantern." + c.name().toLowerCase(Locale.ENGLISH) + ".charge") + ": " + WOLPlayer.get(playerIn).getLevel(c));
+				tooltip.add(e.chatColourChar() + I18n.format("lantern." + e.name().toLowerCase(Locale.ENGLISH) + ".charge") + ": " + WOLPlayer.get(playerIn).getLevel(e));
 			}
 		}
 	}
@@ -55,9 +56,9 @@ public class ItemPowerLantern extends Item// implements IItemPowerProvider
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
 	{
-		for(EnumLanternColour c : EnumLanternColour.values)
+		for(EnumEmotion c : EnumEmotion.values)
 		{
-			if(c != EnumLanternColour.WHITE)//Do not add white to creative menu
+			if(c != EnumEmotion.LIFE)//Do not add life to creative menu
 			{
 				subItems.add(new ItemStack(itemIn, 1, c.ordinal()));
 			}
@@ -83,14 +84,14 @@ public class ItemPowerLantern extends Item// implements IItemPowerProvider
 		return null;// TODO Auto-generated method stub
 	}*/
 
-	public EnumLanternColour getEffectiveColour(ItemStack stack)
+	public EnumEmotion getEffectiveColour(ItemStack stack)
 	{
 		int i = stack.getItemDamage();
-		if(i != EnumLanternColour.INDIGO.ordinal() && i != EnumLanternColour.WHITE.ordinal())
+		if(i != EnumEmotion.COMPASSION.ordinal() && i != EnumEmotion.LIFE.ordinal())
 		{
-			return EnumLanternColour.values[i];
+			return EnumEmotion.values[i];
 		}
 		NBTTagCompound nbt = stack.getTagCompound();
-		return EnumLanternColour.values[nbt.hasKey(TAG_ACTIVE_COLOUR) ? nbt.getInteger(TAG_ACTIVE_COLOUR) : i];
+		return EnumEmotion.values[nbt.hasKey(TAG_ACTIVE_COLOUR) ? nbt.getInteger(TAG_ACTIVE_COLOUR) : i];
 	}
 }
