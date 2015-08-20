@@ -3,20 +3,22 @@ package alpvax.waroflight.core;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
+import alpvax.waroflight.items.WOLItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import alpvax.waroflight.items.WOLItems;
 
 
 public class WOLPlayer implements IExtendedEntityProperties
 {
-	private static final String TAG_LANTERN_STATES = "LanternStates";
+	public static final String TAG_LANTERN_STATES = "LanternStates";
 	private static final String TAG_LEVEL = "Level";
 	private static final String TAG_MASTERED = "Mastered";
 
@@ -39,14 +41,18 @@ public class WOLPlayer implements IExtendedEntityProperties
 			lanternStates.get(key).readFromNBT(compound);
 		}
 	}
-
-	@Override
-	public void init(Entity entity, World world)
+	
+	public WOLPlayer()
 	{
 		for(EnumEmotion e : EnumEmotion.values)
 		{
 			lanternStates.put(e, new LanternState());
 		}
+	}
+
+	@Override
+	public void init(Entity entity, World world)
+	{
 	}
 
 	public void giveLantern(EntityPlayer player, EnumEmotion e)
@@ -111,5 +117,11 @@ public class WOLPlayer implements IExtendedEntityProperties
 	public static final WOLPlayer get(EntityPlayer player)
 	{
 		return (WOLPlayer)player.getExtendedProperties(TAG_LANTERN_STATES);
+	}
+
+	public static final WOLPlayer get(UUID playerID)
+	{
+		EntityPlayer player = (EntityPlayer)MinecraftServer.getServer().getConfigurationManager().uuidToPlayerMap.get(playerID);
+		return player != null ? get(player) : new WOLPlayer();
 	}
 }
