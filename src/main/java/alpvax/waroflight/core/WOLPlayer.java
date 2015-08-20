@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import alpvax.waroflight.items.WOLItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import alpvax.waroflight.items.WOLItems;
 
 
 public class WOLPlayer implements IExtendedEntityProperties
@@ -22,6 +22,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 	private static final String TAG_LEVEL = "Level";
 	private static final String TAG_MASTERED = "Mastered";
 
+	private EntityPlayer player = null;
 	private Map<EnumEmotion, LanternState> lanternStates = new HashMap<EnumEmotion, LanternState>();
 
 	@Override
@@ -41,7 +42,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 			lanternStates.get(key).readFromNBT(compound);
 		}
 	}
-	
+
 	public WOLPlayer()
 	{
 		for(EnumEmotion e : EnumEmotion.values)
@@ -53,26 +54,38 @@ public class WOLPlayer implements IExtendedEntityProperties
 	@Override
 	public void init(Entity entity, World world)
 	{
+		player = (EntityPlayer)entity;
 	}
 
-	public void giveLantern(EntityPlayer player, EnumEmotion e)
+	public void giveLantern(EnumEmotion e)
 	{
-		if(player.inventory.addItemStackToInventory(new ItemStack(WOLItems.ring, 1, e.ordinal())))
+		if(player != null && player.inventory.addItemStackToInventory(new ItemStack(WOLItems.ring, 1, e.ordinal())))
 		{
 			for(Object o : player.worldObj.playerEntities)
 			{
 				EntityPlayer p = (EntityPlayer)o;
 				p.addChatComponentMessage(new ChatComponentTranslation("lantern.aquired." + e.name().toLowerCase(Locale.ENGLISH), p.getDisplayNameString()));
 				lanternStates.get(e).mastered = true;
-				for(LanternState l : lanternStates.values())
+				if(e != EnumEmotion.LIFE)
 				{
-					if(!l.mastered)
+					for(LanternState l : lanternStates.values())
 					{
-						return;
+						if(!l.mastered)
+						{
+							return;
+						}
 					}
+					giveLantern(EnumEmotion.LIFE);
 				}
-				giveLantern(player, EnumEmotion.LIFE);
 			}
+		}
+	}
+
+	public void removeLantern(EnumEmotion e)
+	{
+		if(player != null)
+		{
+			//TODO:Remove lantern
 		}
 	}
 
@@ -86,7 +99,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 		lanternStates.get(e).level += modifier;
 	}
 
-	public class LanternState
+	public static class LanternState
 	{
 		private int level = 0;
 		private boolean mastered = false;
