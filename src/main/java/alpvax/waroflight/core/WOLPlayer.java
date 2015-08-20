@@ -57,7 +57,7 @@ public class WOLPlayer implements IExtendedEntityProperties
 		player = (EntityPlayer)entity;
 	}
 
-	public void giveLantern(EnumEmotion e)
+	public void giveRing(EnumEmotion e)
 	{
 		if(player != null && player.inventory.addItemStackToInventory(new ItemStack(WOLItems.ring, 1, e.ordinal())))
 		{
@@ -75,18 +75,30 @@ public class WOLPlayer implements IExtendedEntityProperties
 							return;
 						}
 					}
-					giveLantern(EnumEmotion.LIFE);
+					giveRing(EnumEmotion.LIFE);
 				}
 			}
 		}
 	}
 
-	public void removeLantern(EnumEmotion e)
+	public void removeRing(EnumEmotion e)
 	{
 		if(player != null)
 		{
-			//TODO:Remove lantern
+			ItemStack ring = new ItemStack(WOLItems.ring, 1, e.ordinal());
+			for(int i = 0; i < player.inventory.mainInventory.length; ++i)
+			{
+				if(ring.isItemEqual(player.inventory.getStackInSlot(i)))
+				{
+					player.inventory.setInventorySlotContents(i, null);
+				}
+			}
 		}
+	}
+
+	public boolean hasRing(EnumEmotion e)
+	{
+		return lanternStates.get(e).mastered;
 	}
 
 	public int getLevel(EnumEmotion e)

@@ -1,15 +1,15 @@
 package alpvax.waroflight.util;
 
-import alpvax.waroflight.core.EnumEmotion;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import alpvax.waroflight.core.EnumEmotion;
 
 
 public class ConfigHelper
 {
 	//TODO: Read from server config file.
-	
-	
+
+
 	/**
 	 * @return The amount the rage bar is increased for killing the entity
 	 */
@@ -38,12 +38,20 @@ public class ConfigHelper
 	{
 		return 1000;
 	}
-	
+
 	/**
 	 * @return The maximum number of players of a certain colour
 	 */
 	public static int getMaxPlayers(EnumEmotion e)
 	{
 		return 3;
+	}
+
+	/**
+	 * @return The level of a certain colour required to recieve a ring
+	 */
+	public static int getThreshold(EnumEmotion ee)
+	{
+		return ee == EnumEmotion.DEATH ? 8000 : 1000;
 	}
 }

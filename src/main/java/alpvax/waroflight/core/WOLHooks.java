@@ -1,6 +1,7 @@
 package alpvax.waroflight.core;
 
-import alpvax.waroflight.util.ConfigHelper;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -10,6 +11,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import alpvax.waroflight.util.ConfigHelper;
+import alpvax.waroflight.util.SelectionHelper;
 
 
 public class WOLHooks
@@ -36,7 +39,7 @@ public class WOLHooks
 			//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
 		}
 	}
-	
+
 	/*TODO:create packet and send to player: sendTo(msg, player)
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent e)
@@ -78,9 +81,21 @@ public class WOLHooks
 			WOLPlayer p = WOLPlayer.get(player);
 			if(p != null)
 			{
-				if(player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
+				for(EnumEmotion ee : EnumEmotion.values)
 				{
-					//TODO:Give
+					if(!p.hasRing(ee) && p.getLevel(ee) >= ConfigHelper.getThreshold(ee) && player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
+					{
+						List<WOLPlayer> list = SelectionHelper.sortedList(ee);
+						for(int i = 0; i < ConfigHelper.getMaxPlayers(ee); i++)
+						{
+							WOLPlayer wp = list.get(i);
+							if(wp == p)
+							{
+								p.giveRing(ee);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
