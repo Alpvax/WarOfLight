@@ -1,12 +1,13 @@
 package alpvax.waroflight.blocks;
 
 import static net.minecraft.block.BlockLiquid.LEVEL;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
@@ -62,14 +63,14 @@ public class BlockRageFire extends BlockFire
 	private void destroyNearbyWater(World world, BlockPos origin)
 	{
 		IBlockState state = world.getBlockState(origin.up());
-		if(state.getBlock().getMaterial() == Material.water)
+		if(state.getMaterial() == Material.water)
 		{
-			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, ((Integer)state.getValue(LEVEL)).intValue() - 7))), 2);
+			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, state.getValue(LEVEL).intValue() - 7))), 2);
 		}
 		for(BlockPos pos : new BlockPos[]{origin.up().north(), origin.up().south(), origin.up().east(), origin.up().west()})
 		{
 			state = world.getBlockState(pos);
-			if(state.getBlock().getMaterial() == Material.water)
+			if(state.getMaterial() == Material.water)
 			{
 				world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
 			}
@@ -77,15 +78,15 @@ public class BlockRageFire extends BlockFire
 		for(BlockPos pos : new BlockPos[]{origin.north(), origin.south(), origin.east(), origin.west()})
 		{
 			state = world.getBlockState(pos);
-			if(state.getBlock().getMaterial() == Material.water)
+			if(state.getMaterial() == Material.water)
 			{
 				world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(1)), 2);
 			}
 		}
 		state = world.getBlockState(origin.down());
-		if(state.getBlock().getMaterial() == Material.water)
+		if(state.getMaterial() == Material.water)
 		{
-			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, ((Integer)state.getValue(LEVEL)).intValue() - 5))), 2);
+			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, state.getValue(LEVEL).intValue() - 5))), 2);
 		}
 	}
 }

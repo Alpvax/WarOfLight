@@ -1,7 +1,8 @@
-package alpvax.waroflight.core;
+package alpvax.waroflight.emotions;
 
+import net.minecraft.util.IStringSerializable;
 
-public enum EnumEmotion
+public enum EnumEmotion implements IStringSerializable
 {
 	RAGE("red", "\u00A74"),
 	GREED("orange", "\u00A76"),
@@ -48,5 +49,11 @@ public enum EnumEmotion
 	public String chatColourChar()
 	{
 		return chatColour;
+	}
+
+	@Override
+	public String getName()
+	{
+		return colour;
 	}
 }

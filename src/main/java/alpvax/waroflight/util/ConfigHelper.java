@@ -1,8 +1,8 @@
 package alpvax.waroflight.util;
 
+import alpvax.waroflight.emotions.EnumEmotion;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import alpvax.waroflight.core.EnumEmotion;
 
 
 public class ConfigHelper

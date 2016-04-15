@@ -1,43 +1,40 @@
 package alpvax.waroflight.core;
 
-import java.util.List;
+import static alpvax.waroflight.capabilities.CapabilityWOLHandler.WOL_EMOTION_CAPABILITY;
 
+import alpvax.waroflight.capabilities.WOLCapabilityProvider;
+import alpvax.waroflight.emotions.EnumEmotion;
+import alpvax.waroflight.emotions.IEmotionHandler;
+import alpvax.waroflight.util.ConfigHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import alpvax.waroflight.util.ConfigHelper;
-import alpvax.waroflight.util.SelectionHelper;
 
 
 public class WOLHooks
 {
 	@SubscribeEvent
-	public void onCreate(EntityConstructing e)
+	public void attachCapabilities(AttachCapabilitiesEvent.Entity event)
 	{
-		if(e.entity instanceof EntityPlayer)
+		if(event.getEntity() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)e.entity;
-			if(WOLPlayer.get(player) == null)
-			{
-				WOLPlayer.register(player);
-			}
+			event.addCapability(WOLConstants.WOL_CAPABILITY, new WOLCapabilityProvider((EntityPlayer)event.getEntity()));
 		}
 	}
 
 	@SubscribeEvent
 	public void onClonePlayer(PlayerEvent.Clone e)
 	{
-		if(e.wasDeath)
-		{
-			WOLPlayer.get(e.entityPlayer).addLevel(EnumEmotion.DEATH, ConfigHelper.getDeathModifier());
-			//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
-		}
+		IEmotionHandler e1 = e.getEntityPlayer().getCapability(WOL_EMOTION_CAPABILITY, null);
+		IEmotionHandler e2 = e.getOriginal().getCapability(WOL_EMOTION_CAPABILITY, null);
+		e1.cloneFrom(e2);
+		e1.addLevel(EnumEmotion.DEATH, ConfigHelper.getDeathModifier());
+		//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
 	}
 
 	/*TODO:create packet and send to player: sendTo(msg, player)
@@ -53,37 +50,37 @@ public class WOLHooks
 	@SubscribeEvent
 	public void onKill(LivingDeathEvent e)
 	{
-		Entity e1 = e.source.getEntity();
+		Entity e1 = e.getSource().getEntity();
 		if(e1 != null && e1 instanceof EntityPlayer)
 		{
-			WOLPlayer.get((EntityPlayer)e1).addLevel(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(e.entityLiving));
+			e1.getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(e.getEntityLiving()));
 		}
 	}
 
 	@SubscribeEvent
 	public void onPickup(ItemPickupEvent e)
 	{
-		WOLPlayer.get(e.player).addLevel(EnumEmotion.GREED, ConfigHelper.getGreedForStack(e.pickedUp.getEntityItem()));
+		e.player.getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.GREED, ConfigHelper.getGreedForStack(e.pickedUp.getEntityItem()));
 	}
 
 	@SubscribeEvent
 	public void onDrop(ItemTossEvent e)
 	{
-		WOLPlayer.get(e.player).addLevel(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(e.entityItem.getEntityItem()));//TODO:Test -function = -(result)
+		e.getPlayer().getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(e.getEntityItem().getEntityItem()));
 	}
 
+	/*TODO:Add/remove rings
 	@SubscribeEvent
-	public void onTick(LivingUpdateEvent e)
+	public void onTick(PlayerTickEvent e)
 	{
-		if(e.entityLiving instanceof EntityPlayer)
+		if(e.phase == Phase.END)
 		{
-			EntityPlayer player = (EntityPlayer)e.entityLiving;
-			WOLPlayer p = WOLPlayer.get(player);
+			WOLPlayer p = WOLPlayer.get(e.player);
 			if(p != null)
 			{
 				for(EnumEmotion ee : EnumEmotion.values)
 				{
-					if(!p.hasRing(ee) && p.getLevel(ee) >= ConfigHelper.getThreshold(ee) && player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
+					if(!p.hasRing(ee) && p.getLevel(ee) >= ConfigHelper.getThreshold(ee) && e.player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
 					{
 						List<WOLPlayer> list = SelectionHelper.sortedList(ee);
 						for(int i = 0; i < ConfigHelper.getMaxPlayers(ee); i++)
@@ -91,7 +88,7 @@ public class WOLHooks
 							WOLPlayer wp = list.get(i);
 							if(wp == p)
 							{
-								p.giveRing(ee);
+								//TODO:p.giveRing(ee);
 								break;
 							}
 						}
@@ -99,5 +96,5 @@ public class WOLHooks
 				}
 			}
 		}
-	}
+	}*/
 }

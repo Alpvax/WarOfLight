@@ -1,8 +1,12 @@
 package alpvax.waroflight.items;
 
+import static alpvax.waroflight.capabilities.CapabilityWOLHandler.WOL_EMOTION_CAPABILITY;
+
 import java.util.List;
 import java.util.Locale;
 
+import alpvax.waroflight.core.WarOfLightMod;
+import alpvax.waroflight.emotions.EnumEmotion;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import alpvax.waroflight.core.EnumEmotion;
-import alpvax.waroflight.core.WOLPlayer;
-import alpvax.waroflight.core.WarOfLightMod;
 
 
 public class ItemPowerRing extends Item// implements IItemPowerProvider
@@ -46,7 +47,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 		{
 			if(advanced || e == getEffectiveColour(stack))
 			{
-				tooltip.add(e.chatColourChar() + I18n.format("lantern." + e.name().toLowerCase(Locale.ENGLISH) + ".charge") + ": " + WOLPlayer.get(playerIn).getLevel(e));
+				tooltip.add(e.chatColourChar() + I18n.format("lantern." + e.name().toLowerCase(Locale.ENGLISH) + ".charge") + ": " + playerIn.getCapability(WOL_EMOTION_CAPABILITY, null).getLevel(e));
 			}
 		}
 	}
