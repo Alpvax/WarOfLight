@@ -14,6 +14,16 @@ public class LanternState implements INBTSerializable<NBTTagCompound>
 		return mastered;
 	}
 
+	public void setMastered()
+	{
+		setMastered(true);
+	}
+
+	public void setMastered(boolean flag)
+	{
+		mastered = true;
+	}
+
 	public int getLevel()
 	{
 		return level;
