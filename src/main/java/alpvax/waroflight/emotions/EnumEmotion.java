@@ -36,12 +36,18 @@ public enum EnumEmotion implements IStringSerializable
 
 	private String colour;
 	private String chatColour;
-	private SkillMilestoneEmotion milestone;
+	private double threshold;
 
 	private EnumEmotion(String spectrumColour, String chatColourChar)
 	{
+		this(spectrumColour, chatColourChar, 1000D);
+	}
+
+	private EnumEmotion(String spectrumColour, String chatColourChar, double masteryThreshold)
+	{
 		colour = spectrumColour;
 		chatColour = chatColourChar;
+		threshold = masteryThreshold;
 	}
 
 	public String colour()
@@ -63,5 +69,10 @@ public enum EnumEmotion implements IStringSerializable
 	public Skill getSkill()
 	{
 		return SkillRegistry.getSkill("emotion_" + name().toLowerCase());
+	}
+
+	public double getThreshold()
+	{
+		return threshold;
 	}
 }
