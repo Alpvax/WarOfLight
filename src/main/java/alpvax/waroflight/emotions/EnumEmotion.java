@@ -1,5 +1,7 @@
 package alpvax.waroflight.emotions;
 
+import alpvax.abilities.api.skill.Skill;
+import alpvax.abilities.api.skill.SkillRegistry;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumEmotion implements IStringSerializable
@@ -13,7 +15,7 @@ public enum EnumEmotion implements IStringSerializable
 	LOVE("violet", "\u00A7D"),
 	DEATH("black", "\u00A70"),
 	LIFE("white", "\u00A7F");
-	public static EnumEmotion[] values = values();
+	public static EnumEmotion[] all_values = values();
 
 	/**
 	 * Gets the emotion by either name or colour.<br>
@@ -22,7 +24,7 @@ public enum EnumEmotion implements IStringSerializable
 	public static EnumEmotion get(String s)
 	{
 		s = s.toLowerCase();
-		for(EnumEmotion e : values)
+		for(EnumEmotion e : all_values)
 		{
 			if(e.name().toLowerCase() == s || e.colour == s)
 			{
@@ -34,6 +36,7 @@ public enum EnumEmotion implements IStringSerializable
 
 	private String colour;
 	private String chatColour;
+	private SkillMilestoneEmotion milestone;
 
 	private EnumEmotion(String spectrumColour, String chatColourChar)
 	{
@@ -55,5 +58,10 @@ public enum EnumEmotion implements IStringSerializable
 	public String getName()
 	{
 		return colour;
+	}
+
+	public Skill getSkill()
+	{
+		return SkillRegistry.getSkill("emotion_" + name().toLowerCase());
 	}
 }

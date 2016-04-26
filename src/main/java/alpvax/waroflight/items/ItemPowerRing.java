@@ -35,7 +35,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		int i = stack.getMetadata();
-		return super.getUnlocalizedName() + "." + EnumEmotion.values[i].name().toLowerCase(Locale.ENGLISH);
+		return super.getUnlocalizedName() + "." + EnumEmotion.all_values[i].name().toLowerCase(Locale.ENGLISH);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -43,7 +43,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced)
 	{
-		for(EnumEmotion e : EnumEmotion.values)
+		for(EnumEmotion e : EnumEmotion.all_values)
 		{
 			if(advanced || e == getEffectiveColour(stack))
 			{
@@ -57,7 +57,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems)
 	{
-		for(EnumEmotion c : EnumEmotion.values)
+		for(EnumEmotion c : EnumEmotion.all_values)
 		{
 			if(c != EnumEmotion.LIFE)//Do not add life to creative menu
 			{
@@ -90,9 +90,9 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 		int i = stack.getItemDamage();
 		if(i != EnumEmotion.COMPASSION.ordinal() && i != EnumEmotion.LIFE.ordinal())
 		{
-			return EnumEmotion.values[i];
+			return EnumEmotion.all_values[i];
 		}
 		NBTTagCompound nbt = stack.getTagCompound();
-		return EnumEmotion.values[nbt.hasKey(TAG_ACTIVE_COLOUR) ? nbt.getInteger(TAG_ACTIVE_COLOUR) : i];
+		return EnumEmotion.all_values[nbt.hasKey(TAG_ACTIVE_COLOUR) ? nbt.getInteger(TAG_ACTIVE_COLOUR) : i];
 	}
 }

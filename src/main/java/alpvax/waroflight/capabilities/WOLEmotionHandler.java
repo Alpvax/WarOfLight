@@ -16,7 +16,7 @@ public class WOLEmotionHandler implements IEmotionHandler
 	public WOLEmotionHandler(EntityPlayer entity)
 	{
 		player = entity;
-		for(EnumEmotion e : EnumEmotion.values)
+		for(EnumEmotion e : EnumEmotion.all_values)
 		{
 			lanternStates.put(e, new LanternState());
 		}
@@ -55,7 +55,7 @@ public class WOLEmotionHandler implements IEmotionHandler
 	@Override
 	public void cloneFrom(IEmotionHandler oldHandler)
 	{
-		for(EnumEmotion e : EnumEmotion.values)
+		for(EnumEmotion e : EnumEmotion.all_values)
 		{
 			getLanternState(e).deserializeNBT(oldHandler.getLanternState(e).serializeNBT());
 		}

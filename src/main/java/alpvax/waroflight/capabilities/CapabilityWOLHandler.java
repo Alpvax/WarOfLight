@@ -25,7 +25,7 @@ public class CapabilityWOLHandler
 			public NBTBase writeNBT(Capability<IEmotionHandler> capability, IEmotionHandler instance, EnumFacing side)
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
-				for(EnumEmotion key : EnumEmotion.values)
+				for(EnumEmotion key : EnumEmotion.all_values)
 				{
 					LanternState l = instance.getLanternState(key);
 					nbt.setTag(key.name(), l.serializeNBT());
@@ -36,7 +36,7 @@ public class CapabilityWOLHandler
 			@Override
 			public void readNBT(Capability<IEmotionHandler> capability, IEmotionHandler instance, EnumFacing side, NBTBase base)
 			{
-				for(EnumEmotion key : EnumEmotion.values)
+				for(EnumEmotion key : EnumEmotion.all_values)
 				{
 					NBTTagCompound nbt = (NBTTagCompound)base;
 					instance.getLanternState(key).deserializeNBT(nbt.getCompoundTag(key.name()));
