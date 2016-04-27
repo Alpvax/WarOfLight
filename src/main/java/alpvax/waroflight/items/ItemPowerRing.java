@@ -5,20 +5,24 @@ import static alpvax.waroflight.capabilities.CapabilityWOLHandler.WOL_EMOTION_CA
 import java.util.List;
 import java.util.Locale;
 
+import alpvax.abilities.api.provider.IAbilityProvider.AbilityProviderFactory;
+import alpvax.abilities.api.provider.ItemAbilityProvider;
 import alpvax.waroflight.core.WarOfLightMod;
 import alpvax.waroflight.emotions.EnumEmotion;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 
-public class ItemPowerRing extends Item// implements IItemPowerProvider
+public class ItemPowerRing extends ItemAbilityProvider
 {
 	private static final String TAG_ACTIVE_COLOUR = "LanternColour";
 
@@ -94,5 +98,24 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 		}
 		NBTTagCompound nbt = stack.getTagCompound();
 		return EnumEmotion.all_values[nbt.hasKey(TAG_ACTIVE_COLOUR) ? nbt.getInteger(TAG_ACTIVE_COLOUR) : i];
+	}
+
+	@Override
+	public boolean hasCustomEntity(ItemStack stack)
+	{
+		return true;
+	}
+
+	@Override
+	public Entity createEntity(World world, Entity location, ItemStack itemstack)
+	{
+		return null;//TODO:Create RingEntity
+	}
+
+	@Override
+	protected AbilityProviderFactory getFactory()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

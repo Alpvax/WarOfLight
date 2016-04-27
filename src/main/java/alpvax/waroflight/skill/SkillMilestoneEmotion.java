@@ -1,17 +1,16 @@
 package alpvax.waroflight.skill;
 
-import alpvax.abilities.api.skill.ISkillHandler;
 import alpvax.abilities.api.skill.SkillInstance;
 import alpvax.abilities.api.skill.SkillMilestone;
 import alpvax.waroflight.emotions.EnumEmotion;
 
-public class SkillMilestoneEmotion extends SkillMilestone
+public abstract class SkillMilestoneEmotion extends SkillMilestone
 {
-	private final EnumEmotion emotion;
+	protected final EnumEmotion emotion;
 
-	public SkillMilestoneEmotion(SkillEmotion skill)
+	public SkillMilestoneEmotion(SkillEmotion skill, String key)
 	{
-		super(skill, "Mastered");
+		super(skill, key);
 		emotion = skill.getEmotion();
 	}
 
@@ -25,22 +24,6 @@ public class SkillMilestoneEmotion extends SkillMilestone
 		default:
 			return value >= emotion.getThreshold();
 		}
-	}
-
-	@Override
-	public void onAchieved(ISkillHandler handler)
-	{
-		//TODO:Grant ring
-		if(emotion != EnumEmotion.LIFE)
-		{
-			handler.getInstance(EnumEmotion.LIFE.getSkill()).markRequiresUpdate();
-		}
-	}
-
-	@Override
-	public void onUnachieved(ISkillHandler handler)
-	{
-		//TODO:Remove ring
 	}
 
 }

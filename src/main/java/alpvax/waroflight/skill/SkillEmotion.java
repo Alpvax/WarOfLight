@@ -1,7 +1,6 @@
 package alpvax.waroflight.skill;
 
 import alpvax.abilities.api.skill.Skill;
-import alpvax.abilities.api.skill.SkillMilestone;
 import alpvax.waroflight.emotions.EnumEmotion;
 
 public class SkillEmotion extends Skill
@@ -12,12 +11,8 @@ public class SkillEmotion extends Skill
 	{
 		super("emotion_" + emotion.name().toLowerCase());
 		this.emotion = emotion;
-		addMilestone(getEmotionMilestone());
-	}
-
-	protected SkillMilestone getEmotionMilestone()
-	{
-		return new SkillMilestoneEmotion(this);
+		addMilestone(new SkillMilestoneEmotionHasRing(this));
+		addMilestone(new SkillMilestoneEmotionMastered(this));
 	}
 
 	public EnumEmotion getEmotion()
