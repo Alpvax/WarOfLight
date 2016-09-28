@@ -1,12 +1,9 @@
 package alpvax.waroflight.core;
 
 import alpvax.waroflight.blocks.WOLBlocks;
-import alpvax.waroflight.capabilities.CapabilityWOLHandler;
 import alpvax.waroflight.emotions.EnumEmotion;
-import alpvax.waroflight.items.WOLItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -29,17 +26,11 @@ public class WarOfLightMod
 
 	public static CreativeTabs creativeTab = new CreativeTabs("warOfLight")
 	{
-		private ItemStack iconItemStack;
-
 		@Override
 		@SideOnly(Side.CLIENT)
-		public ItemStack getIconItemStack()
+		public int getIconItemDamage()
 		{
-			if(iconItemStack == null)
-			{
-				iconItemStack = new ItemStack(WOLBlocks.lantern, 1, EnumEmotion.WILLPOWER.ordinal());//Green Lantern
-			}
-			return iconItemStack;
+			return EnumEmotion.WILLPOWER.ordinal();//Green Lantern
 		}
 
 		@Override

@@ -3,16 +3,17 @@ package alpvax.waroflight.blocks;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-
 public class WOLBlocks
 {
-	public static Block lantern;
-	public static Block rageFire;
+	public static final Block lantern;
 
-	public WOLBlocks()
+	private static final Block[] blocks = {lantern = new BlockLantern()};
+
+	static
 	{
-		lantern = GameRegistry.registerBlock(new BlockLantern().setUnlocalizedName("lantern"), "lantern");
-		rageFire = GameRegistry.registerBlock(new BlockRageFire().setUnlocalizedName("rageFire"), "rageFire");
+		for(Block block : blocks)
+		{
+			GameRegistry.register(block);
+		}
 	}
-
 }

@@ -3,6 +3,11 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AbilityAPI-Standalone"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CharacterOverhaul">
+		<accessrules>
+			<accessrule kind="accessible" pattern="**/api/**"/>
+			<accessrule kind="nonaccessible" pattern="**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

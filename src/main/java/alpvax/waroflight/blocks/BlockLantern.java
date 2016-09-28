@@ -19,10 +19,10 @@ public class BlockLantern extends Block
 
 	public BlockLantern()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		setCreativeTab(WarOfLightMod.creativeTab);
 		setHardness(2.0F);
-		setStepSound(SoundType.METAL);
+		setSoundType(SoundType.METAL);
 		setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumEmotion.WILLPOWER));
 	}
 

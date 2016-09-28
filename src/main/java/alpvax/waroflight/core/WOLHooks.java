@@ -1,8 +1,6 @@
 package alpvax.waroflight.core;
 
-import static alpvax.waroflight.capabilities.CapabilityWOLHandler.WOL_EMOTION_CAPABILITY;
-
-import alpvax.waroflight.capabilities.WOLCapabilityProvider;
+import alpvax.waroflight.capabilities.EmotionCapabilityProvider;
 import alpvax.waroflight.emotions.EnumEmotion;
 import alpvax.waroflight.emotions.IEmotionHandler;
 import alpvax.waroflight.util.ConfigHelper;
@@ -23,15 +21,15 @@ public class WOLHooks
 	{
 		if(event.getEntity() instanceof EntityPlayer)
 		{
-			event.addCapability(WOLConstants.WOL_CAPABILITY, new WOLCapabilityProvider((EntityPlayer)event.getEntity()));
+			event.addCapability(WOLConstants.WOL_CAPABILITY, new EmotionCapabilityProvider((EntityPlayer)event.getEntity()));
 		}
 	}
 
 	@SubscribeEvent
 	public void onClonePlayer(PlayerEvent.Clone e)
 	{
-		IEmotionHandler e1 = e.getEntityPlayer().getCapability(WOL_EMOTION_CAPABILITY, null);
-		IEmotionHandler e2 = e.getOriginal().getCapability(WOL_EMOTION_CAPABILITY, null);
+		IEmotionHandler e1 = e.getEntityPlayer().getCapability(IEmotionHandler.CAPABILITY, null);
+		IEmotionHandler e2 = e.getOriginal().getCapability(IEmotionHandler.CAPABILITY, null);
 		e1.cloneFrom(e2);
 		e1.addLevel(EnumEmotion.DEATH, ConfigHelper.getDeathModifier());
 		//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
@@ -53,20 +51,20 @@ public class WOLHooks
 		Entity e1 = e.getSource().getEntity();
 		if(e1 != null && e1 instanceof EntityPlayer)
 		{
-			e1.getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(e.getEntityLiving()));
+			e1.getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(e.getEntityLiving()));
 		}
 	}
 
 	@SubscribeEvent
 	public void onPickup(ItemPickupEvent e)
 	{
-		e.player.getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.GREED, ConfigHelper.getGreedForStack(e.pickedUp.getEntityItem()));
+		e.player.getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.GREED, ConfigHelper.getGreedForStack(e.pickedUp.getEntityItem()));
 	}
 
 	@SubscribeEvent
 	public void onDrop(ItemTossEvent e)
 	{
-		e.getPlayer().getCapability(WOL_EMOTION_CAPABILITY, null).addLevel(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(e.getEntityItem().getEntityItem()));
+		e.getPlayer().getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(e.getEntityItem().getEntityItem()));
 	}
 
 	/*TODO:Add/remove rings
