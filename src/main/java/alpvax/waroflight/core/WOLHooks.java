@@ -1,12 +1,9 @@
 package alpvax.waroflight.core;
 
-import alpvax.waroflight.capabilities.EmotionCapabilityProvider;
+import alpvax.characteroverhaul.api.character.ICharacter;
 import alpvax.waroflight.emotions.EnumEmotion;
-import alpvax.waroflight.emotions.IEmotionHandler;
-import alpvax.waroflight.util.ConfigHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -17,22 +14,13 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 public class WOLHooks
 {
 	@SubscribeEvent
-	public void attachCapabilities(AttachCapabilitiesEvent.Entity event)
+	public void onClonePlayer(PlayerEvent.Clone event)
 	{
-		if(event.getEntity() instanceof EntityPlayer)
+		EntityPlayer player = event.getEntityPlayer();
+		if(player.hasCapability(ICharacter.CAPABILITY, null))
 		{
-			event.addCapability(WOLConstants.WOL_CAPABILITY, new EmotionCapabilityProvider((EntityPlayer)event.getEntity()));
+			player.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.DEATH.getSkill(), 1000F);//TODO:amount
 		}
-	}
-
-	@SubscribeEvent
-	public void onClonePlayer(PlayerEvent.Clone e)
-	{
-		IEmotionHandler e1 = e.getEntityPlayer().getCapability(IEmotionHandler.CAPABILITY, null);
-		IEmotionHandler e2 = e.getOriginal().getCapability(IEmotionHandler.CAPABILITY, null);
-		e1.cloneFrom(e2);
-		e1.addLevel(EnumEmotion.DEATH, ConfigHelper.getDeathModifier());
-		//TODO: on death. WOLPlayer.get(e.entityPlayer).cloneOnDeath(WOLPlayer.get(e.original));
 	}
 
 	/*TODO:create packet and send to player: sendTo(msg, player)
@@ -46,25 +34,31 @@ public class WOLHooks
 	}*/
 
 	@SubscribeEvent
-	public void onKill(LivingDeathEvent e)
+	public void onKill(LivingDeathEvent event)
 	{
-		Entity e1 = e.getSource().getEntity();
-		if(e1 != null && e1 instanceof EntityPlayer)
+		Entity e = event.getSource().getEntity();
+		if(e != null && e.hasCapability(ICharacter.CAPABILITY, null))
 		{
-			e1.getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(e.getEntityLiving()));
+			e.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(event.getEntityLiving()));
 		}
 	}
 
 	@SubscribeEvent
-	public void onPickup(ItemPickupEvent e)
+	public void onPickup(ItemPickupEvent event)
 	{
-		e.player.getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.GREED, ConfigHelper.getGreedForStack(e.pickedUp.getEntityItem()));
+		if(event.player.hasCapability(ICharacter.CAPABILITY, null))
+		{
+			event.player.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED, ConfigHelper.getGreedForStack(event.pickedUp.getEntityItem()));
+		}
 	}
 
 	@SubscribeEvent
-	public void onDrop(ItemTossEvent e)
+	public void onDrop(ItemTossEvent event)
 	{
-		e.getPlayer().getCapability(IEmotionHandler.CAPABILITY, null).addLevel(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(e.getEntityItem().getEntityItem()));
+		if(event.getPlayer().hasCapability(ICharacter.CAPABILITY, null))
+		{
+			event.getPlayer().getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(event.getEntityItem().getEntityItem()));
+		}
 	}
 
 	/*TODO:Add/remove rings
@@ -78,7 +72,7 @@ public class WOLHooks
 			{
 				for(EnumEmotion ee : EnumEmotion.values)
 				{
-					if(!p.hasRing(ee) && p.getLevel(ee) >= ConfigHelper.getThreshold(ee) && e.player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
+					if(!p.hasRing(ee) && p.getLevel(ee) >= ee.getThreshold(ee) && e.player.worldObj.rand.nextInt(2400) == 0)//Average once every 2 mins
 					{
 						List<WOLPlayer> list = SelectionHelper.sortedList(ee);
 						for(int i = 0; i < ConfigHelper.getMaxPlayers(ee); i++)

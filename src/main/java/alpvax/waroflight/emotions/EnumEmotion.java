@@ -1,5 +1,7 @@
 package alpvax.waroflight.emotions;
 
+import alpvax.characteroverhaul.api.skill.Skill;
+import alpvax.waroflight.skill.SkillEmotion;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumEmotion implements IStringSerializable
@@ -34,11 +36,13 @@ public enum EnumEmotion implements IStringSerializable
 
 	private String colour;
 	private String chatColour;
+	private Skill skill;
 
 	private EnumEmotion(String spectrumColour, String chatColourChar)
 	{
 		colour = spectrumColour;
 		chatColour = chatColourChar;
+		skill = new SkillEmotion(this);
 	}
 
 	public String colour()
@@ -49,6 +53,16 @@ public enum EnumEmotion implements IStringSerializable
 	public String chatColourChar()
 	{
 		return chatColour;
+	}
+
+	public Skill getSkill()
+	{
+		return skill;
+	}
+
+	public int getSkillThreshold()
+	{
+		return this == EnumEmotion.DEATH ? 8000 : 1000;//TODO:Config
 	}
 
 	@Override

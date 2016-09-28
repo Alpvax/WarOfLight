@@ -3,16 +3,15 @@ package alpvax.waroflight.items;
 import java.util.List;
 import java.util.Locale;
 
+import alpvax.characteroverhaul.api.character.ICharacter;
 import alpvax.waroflight.core.WarOfLightMod;
 import alpvax.waroflight.emotions.EnumEmotion;
-import alpvax.waroflight.emotions.IEmotionHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,7 +22,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 
 	public ItemPowerRing()
 	{
-		GameRegistry.registerItem(this, "lantern");
+		setRegistryName("power_ring");
 		setHasSubtypes(true);
 		setMaxDamage(0);
 		setMaxStackSize(1);
@@ -46,7 +45,7 @@ public class ItemPowerRing extends Item// implements IItemPowerProvider
 		{
 			if(advanced || e == getEffectiveColour(stack))
 			{
-				tooltip.add(e.chatColourChar() + I18n.format("lantern." + e.name().toLowerCase(Locale.ENGLISH) + ".charge") + ": " + playerIn.getCapability(IEmotionHandler.CAPABILITY, null).getLevel(e));
+				tooltip.add(e.chatColourChar() + I18n.format("lantern." + e.getName() + ".charge") + ": " + playerIn.getCapability(ICharacter.CAPABILITY, null).getSkillLevel(e.getSkill()));
 			}
 		}
 	}
