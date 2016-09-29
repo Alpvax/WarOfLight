@@ -3,10 +3,13 @@ package alpvax.waroflight.core;
 import alpvax.characteroverhaul.api.character.ICharacter;
 import alpvax.waroflight.emotions.EnumEmotion;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 
@@ -52,12 +55,26 @@ public class WOLHooks
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
 	public void onDrop(ItemTossEvent event)
 	{
 		if(event.getPlayer().hasCapability(ICharacter.CAPABILITY, null))
 		{
 			event.getPlayer().getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(event.getEntityItem().getEntityItem()));
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onDrop(LivingDropsEvent event)
+	{
+		Entity e = event.getEntity();
+		if(e.hasCapability(ICharacter.CAPABILITY, null))
+		{
+			ICharacter character = e.getCapability(ICharacter.CAPABILITY, null);
+			for(EntityItem item : event.getDrops())
+			{
+				character.addSkillExperience(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(item.getEntityItem()));
+			}
 		}
 	}
 
