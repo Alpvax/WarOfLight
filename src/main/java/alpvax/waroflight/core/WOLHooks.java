@@ -2,13 +2,13 @@ package alpvax.waroflight.core;
 
 import alpvax.characteroverhaul.api.character.ICharacter;
 import alpvax.waroflight.emotions.EnumEmotion;
+import alpvax.waroflight.util.ValueHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
@@ -16,16 +16,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 
 public class WOLHooks
 {
-	@SubscribeEvent
-	public void onClonePlayer(PlayerEvent.Clone event)
-	{
-		EntityPlayer player = event.getEntityPlayer();
-		if(player.hasCapability(ICharacter.CAPABILITY, null))
-		{
-			player.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.DEATH.getSkill(), 1000F);//TODO:amount
-		}
-	}
-
 	/*TODO:create packet and send to player: sendTo(msg, player)
 	@SubscribeEvent
 	public void onJoinWorld(EntityJoinWorldEvent e)
@@ -37,12 +27,17 @@ public class WOLHooks
 	}*/
 
 	@SubscribeEvent
-	public void onKill(LivingDeathEvent event)
+	public void onDeath(LivingDeathEvent event)
 	{
 		Entity e = event.getSource().getEntity();
+		EntityLivingBase target = event.getEntityLiving();
 		if(e != null && e.hasCapability(ICharacter.CAPABILITY, null))
 		{
-			e.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.RAGE, ConfigHelper.getRageForEntity(event.getEntityLiving()));
+			e.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.RAGE.getSkill(), ValueHelper.getRageForEntity(target));
+		}
+		if(target.hasCapability(ICharacter.CAPABILITY, null))
+		{
+			target.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.DEATH.getSkill(), ValueHelper.getDeathExperience(target));
 		}
 	}
 
@@ -51,7 +46,7 @@ public class WOLHooks
 	{
 		if(event.player.hasCapability(ICharacter.CAPABILITY, null))
 		{
-			event.player.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED, ConfigHelper.getGreedForStack(event.pickedUp.getEntityItem()));
+			event.player.getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED.getSkill(), ValueHelper.getGreedForStack(event.pickedUp.getEntityItem()));
 		}
 	}
 
@@ -60,7 +55,7 @@ public class WOLHooks
 	{
 		if(event.getPlayer().hasCapability(ICharacter.CAPABILITY, null))
 		{
-			event.getPlayer().getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(event.getEntityItem().getEntityItem()));
+			event.getPlayer().getCapability(ICharacter.CAPABILITY, null).addSkillExperience(EnumEmotion.GREED.getSkill(), -ValueHelper.getGreedForStack(event.getEntityItem().getEntityItem()));
 		}
 	}
 
@@ -73,7 +68,7 @@ public class WOLHooks
 			ICharacter character = e.getCapability(ICharacter.CAPABILITY, null);
 			for(EntityItem item : event.getDrops())
 			{
-				character.addSkillExperience(EnumEmotion.GREED, -ConfigHelper.getGreedForStack(item.getEntityItem()));
+				character.addSkillExperience(EnumEmotion.GREED.getSkill(), -ValueHelper.getGreedForStack(item.getEntityItem()));
 			}
 		}
 	}
