@@ -23,7 +23,7 @@ public class BlockRageFire extends BlockFire
 	 * Called when a neighboring block changes.
 	 */
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
 		/*int i = 0;
 		IBlockState state1 = worldIn.getBlockState(pos.up());
@@ -57,34 +57,34 @@ public class BlockRageFire extends BlockFire
 			return;
 		}*/
 		destroyNearbyWater(worldIn, pos);
-		super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
+		super.neighborChanged(state, worldIn, pos, blockIn);
 	}
 
 	private void destroyNearbyWater(World world, BlockPos origin)
 	{
 		IBlockState state = world.getBlockState(origin.up());
-		if(state.getMaterial() == Material.water)
+		if(state.getMaterial() == Material.WATER)
 		{
 			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, state.getValue(LEVEL).intValue() - 7))), 2);
 		}
 		for(BlockPos pos : new BlockPos[]{origin.up().north(), origin.up().south(), origin.up().east(), origin.up().west()})
 		{
 			state = world.getBlockState(pos);
-			if(state.getMaterial() == Material.water)
+			if(state.getMaterial() == Material.WATER)
 			{
-				world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+				world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 			}
 		}
 		for(BlockPos pos : new BlockPos[]{origin.north(), origin.south(), origin.east(), origin.west()})
 		{
 			state = world.getBlockState(pos);
-			if(state.getMaterial() == Material.water)
+			if(state.getMaterial() == Material.WATER)
 			{
 				world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(1)), 2);
 			}
 		}
 		state = world.getBlockState(origin.down());
-		if(state.getMaterial() == Material.water)
+		if(state.getMaterial() == Material.WATER)
 		{
 			world.setBlockState(origin.up(), state.withProperty(LEVEL, Integer.valueOf(Math.max(0, state.getValue(LEVEL).intValue() - 5))), 2);
 		}
